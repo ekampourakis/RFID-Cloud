@@ -24,88 +24,76 @@ Partial Class Main
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.ServerThread = New System.ComponentModel.BackgroundWorker()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button_Start = New System.Windows.Forms.Button()
+        Me.Button_Stop = New System.Windows.Forms.Button()
         Me.GUI_Update = New System.Windows.Forms.Timer(Me.components)
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Button3 = New System.Windows.Forms.Button()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.StatusStrip = New System.Windows.Forms.StatusStrip()
+        Me.Label_Status = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.StatusStrip.SuspendLayout()
         Me.SuspendLayout()
         '
         'ServerThread
         '
         Me.ServerThread.WorkerSupportsCancellation = True
         '
-        'Button1
+        'Button_Start
         '
-        Me.Button1.Location = New System.Drawing.Point(78, 55)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 0
-        Me.Button1.Text = "start"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.Button_Start.Location = New System.Drawing.Point(78, 55)
+        Me.Button_Start.Name = "Button_Start"
+        Me.Button_Start.Size = New System.Drawing.Size(75, 23)
+        Me.Button_Start.TabIndex = 0
+        Me.Button_Start.Text = "Start"
+        Me.Button_Start.UseVisualStyleBackColor = True
         '
-        'Button2
+        'Button_Stop
         '
-        Me.Button2.Location = New System.Drawing.Point(172, 55)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 23)
-        Me.Button2.TabIndex = 1
-        Me.Button2.Text = "stop"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.Button_Stop.Location = New System.Drawing.Point(159, 55)
+        Me.Button_Stop.Name = "Button_Stop"
+        Me.Button_Stop.Size = New System.Drawing.Size(75, 23)
+        Me.Button_Stop.TabIndex = 1
+        Me.Button_Stop.Text = "Stop"
+        Me.Button_Stop.UseVisualStyleBackColor = True
         '
         'GUI_Update
         '
         Me.GUI_Update.Enabled = True
         Me.GUI_Update.Interval = 10
         '
-        'Label1
+        'StatusStrip
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(275, 60)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 3
-        Me.Label1.Text = "Label1"
+        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_Status})
+        Me.StatusStrip.Location = New System.Drawing.Point(0, 431)
+        Me.StatusStrip.Name = "StatusStrip"
+        Me.StatusStrip.Size = New System.Drawing.Size(912, 22)
+        Me.StatusStrip.TabIndex = 4
         '
-        'Button3
+        'Label_Status
         '
-        Me.Button3.Location = New System.Drawing.Point(264, 138)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(75, 23)
-        Me.Button3.TabIndex = 4
-        Me.Button3.Text = "Button3"
-        Me.Button3.UseVisualStyleBackColor = True
-        '
-        'TextBox1
-        '
-        Me.TextBox1.Location = New System.Drawing.Point(188, 206)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(100, 20)
-        Me.TextBox1.TabIndex = 5
+        Me.Label_Status.Name = "Label_Status"
+        Me.Label_Status.Size = New System.Drawing.Size(58, 17)
+        Me.Label_Status.Text = "No Status"
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(567, 336)
-        Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.Button3)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.ClientSize = New System.Drawing.Size(912, 453)
+        Me.Controls.Add(Me.StatusStrip)
+        Me.Controls.Add(Me.Button_Stop)
+        Me.Controls.Add(Me.Button_Start)
         Me.Name = "Main"
         Me.Text = "Main"
+        Me.StatusStrip.ResumeLayout(False)
+        Me.StatusStrip.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents ServerThread As System.ComponentModel.BackgroundWorker
-    Friend WithEvents Button1 As Button
-    Friend WithEvents Button2 As Button
+    Friend WithEvents Button_Start As Button
+    Friend WithEvents Button_Stop As Button
     Friend WithEvents GUI_Update As Timer
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Button3 As Button
-    Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents StatusStrip As StatusStrip
+    Friend WithEvents Label_Status As ToolStripStatusLabel
 End Class
