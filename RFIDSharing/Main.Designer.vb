@@ -28,7 +28,9 @@ Partial Class Main
         Me.Button_Stop = New System.Windows.Forms.Button()
         Me.GUI_Update = New System.Windows.Forms.Timer(Me.components)
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
-        Me.Label_Status = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.Label_FTPStatus = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
+        Me.Label_SerialStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StatusStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -38,7 +40,7 @@ Partial Class Main
         '
         'Button_Start
         '
-        Me.Button_Start.Location = New System.Drawing.Point(78, 55)
+        Me.Button_Start.Location = New System.Drawing.Point(82, 96)
         Me.Button_Start.Name = "Button_Start"
         Me.Button_Start.Size = New System.Drawing.Size(75, 23)
         Me.Button_Start.TabIndex = 0
@@ -47,7 +49,7 @@ Partial Class Main
         '
         'Button_Stop
         '
-        Me.Button_Stop.Location = New System.Drawing.Point(159, 55)
+        Me.Button_Stop.Location = New System.Drawing.Point(163, 96)
         Me.Button_Stop.Name = "Button_Stop"
         Me.Button_Stop.Size = New System.Drawing.Size(75, 23)
         Me.Button_Stop.TabIndex = 1
@@ -61,17 +63,28 @@ Partial Class Main
         '
         'StatusStrip
         '
-        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_Status})
+        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_FTPStatus, Me.Label_SerialStatus})
         Me.StatusStrip.Location = New System.Drawing.Point(0, 431)
         Me.StatusStrip.Name = "StatusStrip"
         Me.StatusStrip.Size = New System.Drawing.Size(912, 22)
         Me.StatusStrip.TabIndex = 4
         '
-        'Label_Status
+        'Label_FTPStatus
         '
-        Me.Label_Status.Name = "Label_Status"
-        Me.Label_Status.Size = New System.Drawing.Size(58, 17)
-        Me.Label_Status.Text = "No Status"
+        Me.Label_FTPStatus.Name = "Label_FTPStatus"
+        Me.Label_FTPStatus.Size = New System.Drawing.Size(58, 17)
+        Me.Label_FTPStatus.Text = "No Status"
+        '
+        'SerialPort
+        '
+        Me.SerialPort.BaudRate = 115200
+        Me.SerialPort.DtrEnable = True
+        '
+        'Label_SerialStatus
+        '
+        Me.Label_SerialStatus.Name = "Label_SerialStatus"
+        Me.Label_SerialStatus.Size = New System.Drawing.Size(58, 17)
+        Me.Label_SerialStatus.Text = "No Status"
         '
         'Main
         '
@@ -95,5 +108,7 @@ Partial Class Main
     Friend WithEvents Button_Stop As Button
     Friend WithEvents GUI_Update As Timer
     Friend WithEvents StatusStrip As StatusStrip
-    Friend WithEvents Label_Status As ToolStripStatusLabel
+    Friend WithEvents Label_FTPStatus As ToolStripStatusLabel
+    Friend WithEvents Label_SerialStatus As ToolStripStatusLabel
+    Friend WithEvents SerialPort As IO.Ports.SerialPort
 End Class

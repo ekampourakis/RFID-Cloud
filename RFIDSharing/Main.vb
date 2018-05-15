@@ -5,6 +5,9 @@ Public Class Main
     Dim ServerRunning As Boolean = False
     Dim ServerInstance
 
+    Dim ScannerConnected As Boolean = False
+
+
     Private Sub InitServer(ByVal ServerPassword As String)
         ServerInstance = New Server With {
             .LogHandler = New DefaultLogHandler(False),
@@ -58,9 +61,9 @@ Public Class Main
 
     Private Sub GUI_Update_Tick(sender As Object, e As EventArgs) Handles GUI_Update.Tick
         If ServerRunning Then
-            If Label_Status.ForeColor <> Color.Green Then
-                Label_Status.Text = "Running at " & GetIPv4Address() & " on port " & ServerInstance.LocalPort
-                Label_Status.ForeColor = Color.Green
+            If Label_FTPStatus.ForeColor <> Color.Green Then
+                Label_FTPStatus.Text = "Running at " & GetIPv4Address() & " on port " & ServerInstance.LocalPort
+                Label_FTPStatus.ForeColor = Color.Green
             End If
             If Button_Start.Enabled Then
                 Button_Start.Enabled = False
@@ -69,9 +72,9 @@ Public Class Main
                 Button_Stop.Enabled = True
             End If
         Else
-            If Label_Status.ForeColor <> Color.Firebrick Then
-                Label_Status.Text = "Stopped"
-                Label_Status.ForeColor = Color.Firebrick
+            If Label_FTPStatus.ForeColor <> Color.Firebrick Then
+                Label_FTPStatus.Text = "Stopped"
+                Label_FTPStatus.ForeColor = Color.Firebrick
             End If
             If Button_Start.Enabled = False Then
                 Button_Start.Enabled = True
@@ -80,7 +83,36 @@ Public Class Main
                 Button_Stop.Enabled = False
             End If
         End If
+
+        If ScannerConnected Then
+            If Label_SerialStatus.ForeColor <> Color.Green Then
+                Label_SerialStatus.ForeColor = Color.Green
+                Label_SerialStatus.Text = "Connected"
+            End If
+        Else
+            If Label_SerialStatus.ForeColor <> Color.Firebrick Then
+                Label_SerialStatus.ForeColor = Color.Firebrick
+                Label_SerialStatus.Text = "Disconnected"
+            End If
+        End If
     End Sub
 
-
+    Private Sub SerialPort_DataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
+        'if received card scan command then
+        '   ask for rfid code
+        '   if card registered
+        '       if registered code = code
+        '           repeat password set procedure to change password
+        '       else
+        '           search network for the server with this code
+        '   else
+        '       register code and ask for password
+        '       send password to be written on the card and create blocking function here until received password written code
+        'if received password written command then
+        '
+        'if received waiting for card to write password code
+        '
+        'if received error code
+        '   analyze error code
+    End Sub
 End Class
