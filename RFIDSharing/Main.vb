@@ -2,10 +2,10 @@
 
 Public Class Main
 
+#Region "Server"
+
     Dim ServerRunning As Boolean = False
     Dim ServerInstance
-
-    Dim ScannerConnected As Boolean = False
 
 
     Private Sub InitServer(ByVal ServerPassword As String)
@@ -36,8 +36,19 @@ Public Class Main
         End If
     End Sub
 
+#End Region
+
+    Dim ScannerConnected As Boolean = False
+
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        InitServer("MyUID")
+        If My.Settings.UID <> "null" Then
+            ' load normal GUI
+            InitServer(My.Settings.UID)
+        Else
+            ' load welcome GUI
+            ' go through registration steps
+            '   set state to wait for UID from Serial
+        End If
     End Sub
 
     Private Function GetIPv4Address() As String
