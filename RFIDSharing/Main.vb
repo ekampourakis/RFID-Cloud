@@ -1,6 +1,10 @@
-﻿Imports mooftpserv
+﻿Imports System.Text
+Imports mooftpserv
 
 Public Class Main
+
+#Const DEBUG = True
+
 
 #Region "Server"
 
@@ -41,6 +45,14 @@ Public Class Main
     Dim ScannerConnected As Boolean = False
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+#If DEBUG Then
+        SerialPort.Open()
+        ScannerConnected = True
+#Else
+        BackgroundWorker_Serial.RunWorkerAsync()
+#End If
+
+        Console.WriteLine("Current UID: " & My.Settings.UID)
         If My.Settings.UID <> "null" Then
             ' load normal GUI
             InitServer(My.Settings.UID)
@@ -98,17 +110,50 @@ Public Class Main
         If ScannerConnected Then
             If Label_SerialStatus.ForeColor <> Color.Green Then
                 Label_SerialStatus.ForeColor = Color.Green
-                Label_SerialStatus.Text = "Connected"
+                Label_SerialStatus.Text = "Scanner Connected"
             End If
         Else
             If Label_SerialStatus.ForeColor <> Color.Firebrick Then
                 Label_SerialStatus.ForeColor = Color.Firebrick
-                Label_SerialStatus.Text = "Disconnected"
+                Label_SerialStatus.Text = "Scanner Disconnected"
             End If
         End If
     End Sub
 
+    Private Function UIDToString(Input As Byte())
+        Dim strTemp As String = ""
+        For Each b As Byte In Input
+            strTemp &= (Hex(b).PadLeft(2, "0"))
+        Next
+        Return strTemp
+    End Function
+
     Private Sub SerialPort_DataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
+        If ScannerConnected Then
+            If SerialPort.BytesToRead > 5 Then
+                Dim Received(6) As Byte
+                For Index As Integer = 0 To 5
+                    Received(Index) = SerialPort.ReadByte()
+                Next
+                Console.WriteLine("Received: " & UIDToString(Received))
+                If Received(0) = 1 And Received(5) = 2 Then
+                    Dim UID(4) As Byte
+                    For Index As Integer = 0 To 3
+                        UID(Index) = Received(Index + 1)
+                    Next
+                    If My.Settings.UID <> "null" Then
+                        ' just read a card then try connect to it
+                        Console.Write("just a card")
+                    Else
+
+                        My.Settings.UID = UIDToString(UID)
+                        My.Settings.Save()
+                        Console.WriteLine(UIDToString(UID))
+                    End If
+                End If
+            End If
+        End If
+
         'if received card scan command then
         '   ask for rfid code
         '   if card registered
@@ -125,5 +170,15 @@ Public Class Main
         '
         'if received error code
         '   analyze error code
+    End Sub
+
+    Private Sub BackgroundWorker_Serial_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles BackgroundWorker_Serial.DoWork
+Wait:   While Not ScannerConnected
+            ScannerConnected = EnhancedSerial.AutoConnect(SerialPort, 13, {0, 255}, 115200)
+        End While
+        While ScannerConnected
+            ' do some kind of ping here to see if the serial is still there
+        End While
+        GoTo Wait
     End Sub
 End Class

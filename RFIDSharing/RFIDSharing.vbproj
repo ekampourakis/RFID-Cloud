@@ -78,6 +78,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnhancedSerial.vb" />
     <Compile Include="Main.Designer.vb">
       <DependentUpon>Main.vb</DependentUpon>
     </Compile>

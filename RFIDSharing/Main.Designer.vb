@@ -32,6 +32,8 @@ Partial Class Main
         Me.Label_FTPStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.Label_SerialStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
+        Me.SerialTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.BackgroundWorker_Serial = New System.ComponentModel.BackgroundWorker()
         Me.StatusStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -65,9 +67,9 @@ Partial Class Main
         'StatusStrip
         '
         Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_FTPStatus, Me.Label_SerialStatus})
-        Me.StatusStrip.Location = New System.Drawing.Point(0, 368)
+        Me.StatusStrip.Location = New System.Drawing.Point(0, 390)
         Me.StatusStrip.Name = "StatusStrip"
-        Me.StatusStrip.Size = New System.Drawing.Size(651, 22)
+        Me.StatusStrip.Size = New System.Drawing.Size(690, 22)
         Me.StatusStrip.TabIndex = 4
         '
         'Label_FTPStatus
@@ -86,12 +88,21 @@ Partial Class Main
         '
         Me.SerialPort.BaudRate = 115200
         Me.SerialPort.DtrEnable = True
+        Me.SerialPort.PortName = "COM8"
+        '
+        'SerialTimer
+        '
+        Me.SerialTimer.Enabled = True
+        Me.SerialTimer.Interval = 1000
+        '
+        'BackgroundWorker_Serial
+        '
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(651, 390)
+        Me.ClientSize = New System.Drawing.Size(690, 412)
         Me.Controls.Add(Me.StatusStrip)
         Me.Controls.Add(Me.Button_Stop)
         Me.Controls.Add(Me.Button_Start)
@@ -113,4 +124,6 @@ Partial Class Main
     Friend WithEvents Label_FTPStatus As ToolStripStatusLabel
     Friend WithEvents Label_SerialStatus As ToolStripStatusLabel
     Friend WithEvents SerialPort As IO.Ports.SerialPort
+    Friend WithEvents SerialTimer As Timer
+    Friend WithEvents BackgroundWorker_Serial As System.ComponentModel.BackgroundWorker
 End Class

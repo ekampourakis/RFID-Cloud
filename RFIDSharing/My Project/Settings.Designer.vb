@@ -54,13 +54,16 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("null")>  _
-        Public ReadOnly Property UID() As String
+        Public Property UID() As String
             Get
                 Return CType(Me("UID"),String)
             End Get
+            Set
+                Me("UID") = value
+            End Set
         End Property
     End Class
 End Namespace
