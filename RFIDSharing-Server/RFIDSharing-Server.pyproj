@@ -68,6 +68,7 @@
     <Content Include="RFIDSharing_Server\templates\contact.html" />
     <Content Include="RFIDSharing_Server\templates\index.html" />
     <Content Include="RFIDSharing_Server\templates\layout.html" />
+    <Content Include="RFIDSharing_Server\templates\return.html" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="RFIDSharing\">

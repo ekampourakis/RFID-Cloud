@@ -7,7 +7,7 @@ Public Class Main
 
 
 #Region "Server"
-
+    ' Username rfid and password UID
     Dim ServerRunning As Boolean = False
     Dim ServerInstance
 
@@ -30,6 +30,7 @@ Public Class Main
         If ServerRunning = False Then
             ServerThread.RunWorkerAsync()
         End If
+        ' Register server address and code to server
     End Sub
 
     Private Sub StopServer()
@@ -42,25 +43,38 @@ Public Class Main
 
 #End Region
 
+    Dim SettingsReloaded As Boolean = True
     Dim ScannerConnected As Boolean = False
 
     Private Sub Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 #If DEBUG Then
-        SerialPort.Open()
-        ScannerConnected = True
+        'SerialPort.Open() ' Manually connect to scanner
+        'ScannerConnected = True
+        'My.Settings.Reset() ' Reset all settings
 #Else
         BackgroundWorker_Serial.RunWorkerAsync()
 #End If
 
+        ReloadSettings()
         Console.WriteLine("Current UID: " & My.Settings.UID)
         If My.Settings.UID <> "null" Then
             ' load normal GUI
             InitServer(My.Settings.UID)
+            StartServer()
         Else
             ' load welcome GUI
             ' go through registration steps
             '   set state to wait for UID from Serial
         End If
+    End Sub
+
+    Private Sub Connect(ByVal Address As String, ByVal Password As String)
+        Dim command As New Process
+        command.StartInfo.FileName = "explorer.exe"
+        command.StartInfo.Arguments = "ftp://rfid:" & Password & "@" & Address
+        command.StartInfo.Verb = "open"
+        command.StartInfo.UseShellExecute = False
+        command.Start()
     End Sub
 
     Private Function GetIPv4Address() As String
@@ -82,6 +96,11 @@ Public Class Main
         StopServer()
     End Sub
 
+    Private Sub ReloadSettings()
+        SettingsReloaded = True
+    End Sub
+
+
     Private Sub GUI_Update_Tick(sender As Object, e As EventArgs) Handles GUI_Update.Tick
         If ServerRunning Then
             If Label_FTPStatus.ForeColor <> Color.Green Then
@@ -96,7 +115,7 @@ Public Class Main
             End If
         Else
             If Label_FTPStatus.ForeColor <> Color.Firebrick Then
-                Label_FTPStatus.Text = "Stopped"
+                Label_FTPStatus.Text = "Server Stopped"
                 Label_FTPStatus.ForeColor = Color.Firebrick
             End If
             If Button_Start.Enabled = False Then
@@ -118,6 +137,13 @@ Public Class Main
                 Label_SerialStatus.Text = "Scanner Disconnected"
             End If
         End If
+
+        If SettingsReloaded Then
+            SettingsReloaded = False
+            My.Settings.Reload()
+            TextBox_CardUID.Text = My.Settings.UID
+            TextBox_CompanyName.Text = My.Settings.CompanyName
+        End If
     End Sub
 
     Private Function UIDToString(Input As Byte())
@@ -131,24 +157,42 @@ Public Class Main
     Private Sub SerialPort_DataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
         If ScannerConnected Then
             If SerialPort.BytesToRead > 5 Then
-                Dim Received(6) As Byte
+                Dim Received As New List(Of Byte)
                 For Index As Integer = 0 To 5
-                    Received(Index) = SerialPort.ReadByte()
+                    Received.Add(SerialPort.ReadByte())
                 Next
-                Console.WriteLine("Received: " & UIDToString(Received))
+                ReloadSettings()
                 If Received(0) = 1 And Received(5) = 2 Then
-                    Dim UID(4) As Byte
+                    Dim UID As New List(Of Byte)
                     For Index As Integer = 0 To 3
-                        UID(Index) = Received(Index + 1)
+                        UID.Add(Received(Index + 1))
                     Next
-                    If My.Settings.UID <> "null" Then
-                        ' just read a card then try connect to it
-                        Console.Write("just a card")
-                    Else
+                    Dim CardHex As String = UIDToString(UID.ToArray)
+                    Console.WriteLine("Incoming Card: " & CardHex)
+                    If My.Settings.UID = "null" Then
+                        Dim result As Integer = MessageBox.Show("It seems like you haven't registered a card code to this application yet. 
+By registering your card you can connect to your server easily. Do you want to register the new card?", "New Card: " & CardHex, MessageBoxButtons.YesNoCancel)
+                        If result = DialogResult.Cancel Then
+                            Console.WriteLine("Skipped card.")
+                        ElseIf result = DialogResult.No Then
+                            Console.WriteLine("Connect to card.")
+                            Connect(GetIPv4Address, CardHex)
+                        ElseIf result = DialogResult.Yes Then
+                            My.Settings.UID = CardHex
+                            My.Settings.Save()
+                            ReloadSettings()
+                            InitServer(My.Settings.UID)
+                            Console.WriteLine("Registered New UID: " & CardHex)
+                            Dim result2 As Integer = MessageBox.Show("The new card is now registered. Do you want to start the server?", "Card Registered", MessageBoxButtons.YesNo)
+                            If result = DialogResult.Yes Then
+                                StartServer()
+                            End If
+                        End If
 
-                        My.Settings.UID = UIDToString(UID)
-                        My.Settings.Save()
-                        Console.WriteLine(UIDToString(UID))
+                    Else
+                        ' just read a card then try connect to it
+                        Console.WriteLine("UID Registered. Connect to card.")
+                        Connect(GetIPv4Address, CardHex)
                     End If
                 End If
             End If
@@ -181,4 +225,5 @@ Wait:   While Not ScannerConnected
         End While
         GoTo Wait
     End Sub
+
 End Class
