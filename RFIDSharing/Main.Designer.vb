@@ -38,6 +38,7 @@ Partial Class Main
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TextBox_CompanyName = New System.Windows.Forms.TextBox()
         Me.TextBox_CardUID = New System.Windows.Forms.TextBox()
+        Me.Label_ConnectionStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.StatusStrip.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -70,7 +71,7 @@ Partial Class Main
         '
         'StatusStrip
         '
-        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_FTPStatus, Me.Label_SerialStatus})
+        Me.StatusStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Label_FTPStatus, Me.Label_SerialStatus, Me.Label_ConnectionStatus})
         Me.StatusStrip.Location = New System.Drawing.Point(0, 390)
         Me.StatusStrip.Name = "StatusStrip"
         Me.StatusStrip.Size = New System.Drawing.Size(690, 22)
@@ -136,6 +137,12 @@ Partial Class Main
         Me.TextBox_CardUID.Size = New System.Drawing.Size(142, 20)
         Me.TextBox_CardUID.TabIndex = 8
         '
+        'Label_ConnectionStatus
+        '
+        Me.Label_ConnectionStatus.Name = "Label_ConnectionStatus"
+        Me.Label_ConnectionStatus.Size = New System.Drawing.Size(58, 17)
+        Me.Label_ConnectionStatus.Text = "No Status"
+        '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -172,4 +179,5 @@ Partial Class Main
     Friend WithEvents Label2 As Label
     Friend WithEvents TextBox_CompanyName As TextBox
     Friend WithEvents TextBox_CardUID As TextBox
+    Friend WithEvents Label_ConnectionStatus As ToolStripStatusLabel
 End Class

@@ -141,8 +141,9 @@ namespace mooftpserv
         /// </summary>
         private void Work()
         {
-            if (logHandler != null)
+            if (logHandler != null) {
                 logHandler.NewControlConnection();
+            }    
 
             try {
                 if (!authHandler.AllowControlConnection()) {

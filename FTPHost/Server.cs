@@ -176,6 +176,11 @@ namespace mooftpserv
             socket.Stop();
         }
 
+        public int Connections 
+        {
+            get { return sessions.Count; }
+        }
+
         /// <summary>
         /// Get the default address, which is IPAddress.Any everywhere except on WinCE,
         /// where all local addresses are enumerated and the first non-loopback IP is used.

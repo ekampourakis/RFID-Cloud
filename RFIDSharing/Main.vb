@@ -18,6 +18,7 @@ Public Class Main
             .AuthHandler = New DefaultAuthHandler(False),
             .Password = ServerPassword
         }
+
     End Sub
 
     Private Sub ServerThread_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles ServerThread.DoWork
@@ -28,6 +29,7 @@ Public Class Main
 
     Private Sub StartServer()
         If ServerRunning = False Then
+            InitServer(My.Settings.UID)
             ServerThread.RunWorkerAsync()
         End If
         ' Register server address and code to server
@@ -59,7 +61,6 @@ Public Class Main
         Console.WriteLine("Current UID: " & My.Settings.UID)
         If My.Settings.UID <> "null" Then
             ' load normal GUI
-            InitServer(My.Settings.UID)
             StartServer()
         Else
             ' load welcome GUI
@@ -144,6 +145,9 @@ Public Class Main
             TextBox_CardUID.Text = My.Settings.UID
             TextBox_CompanyName.Text = My.Settings.CompanyName
         End If
+
+        Label_ConnectionStatus.Text = ServerInstance.Connections() & " Connections"
+
     End Sub
 
     Private Function UIDToString(Input As Byte())
@@ -181,7 +185,6 @@ By registering your card you can connect to your server easily. Do you want to r
                             My.Settings.UID = CardHex
                             My.Settings.Save()
                             ReloadSettings()
-                            InitServer(My.Settings.UID)
                             Console.WriteLine("Registered New UID: " & CardHex)
                             Dim result2 As Integer = MessageBox.Show("The new card is now registered. Do you want to start the server?", "Card Registered", MessageBoxButtons.YesNo)
                             If result = DialogResult.Yes Then
